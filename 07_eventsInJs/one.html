@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="myButton">
+        <h1>Click me!</h1>
+    </button>
+
+    <script>
+
+        document.addEventListener("keydown", function (event) {
+            console.log("Key Pressed:", event.key);
+            console.log("Key Code:", event.keyCode);
+            console.log("Alt Key Pressed?", event.altKey);
+            console.log("Ctrl Key Pressed?", event.ctrlKey);
+            console.log("Shift Key Pressed?", event.shiftKey);            
+        });
+
+        document.addEventListener("mousemove", function (event) {
+            console.log("Client X:", event.clientX, "Client Y:", event.clientY);
+            console.log("Screen X:", event.screenX, "Screen Y:", event.screenY);
+        });
+
+        // document.getElementById("myButton").addEventListener("click", function (event) {
+        //     console.log("Clicked Element:", event.target);
+        //     console.log("Current Target:", event.currentTarget);
+        // });
+
+        document.addEventListener("click", function (event) {
+            console.log("Event Type:", event.type);
+            console.log("Timestamp:", event.timeStamp);
+            console.log("Default Prevented:", event.defaultPrevented);
+        });
+
+
+    </script>
+
+</body>
+
+</html>

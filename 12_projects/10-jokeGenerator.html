@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Joke Generator</title>
+    <style>
+        *{
+            color:aliceblue;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 40px;
+            background-color: #111;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            color: black;
+        }
+
+        #joke {
+            margin-top: 30px;
+            font-size: 30px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>😂 Random Joke Generator</h1>
+    <button id="btn">Get a Joke</button>
+    <p id="joke">Click the button to laugh!</p>
+
+    <script>
+
+
+        const btn = document.getElementById('btn');
+        btn.addEventListener('click', getJoke);
+
+        async function getJoke() {
+            const url = 'https://v2.jokeapi.dev/joke/Any';
+
+            try {
+                console.log("Fetching data");
+                const response = await fetch(url);
+                const data = await response.json();
+
+                // Check if it's a single or two-part joke
+                // console.log(data.type);
+                // console.log(data.setup);
+                
+                
+                const jokeText = data.type === "single" ? data.joke : `${data.setup} - ${data.delivery}`;
+                console.log(data);
+
+                document.getElementById("joke").innerText = jokeText;
+            } catch (error) {
+                document.getElementById("joke").innerText = "Oops! Couldn't fetch a joke.";
+                console.error(error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

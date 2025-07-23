@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="container">
+        <h2>Temperature Converter</h2>
+        <input type="number" id="celsius" placeholder="Enter temperature in Celsius">
+        <!-- <button onclick="convertTemperature()">Convert to Fahrenheit</button> -->
+        <button>Convert to Fahrenheit</button>
+        <p id="result"></p>
+    </form>
+
+
+    <script>
+
+        const container = document.querySelector('.container');
+        container.addEventListener('submit', (e) => {
+            e.preventDefault();
+            tempInCelsius = parseInt(document.querySelector('#celsius').value);
+            const result = document.querySelector("#result");
+            const tempInFahrenheit = (tempInCelsius * 9 / 5) + 32;
+            result.innerHTML = `<b>The Tempreture is ${tempInFahrenheit}°F<b>`
+        })
+    </script>
+</body>
+
+</html> 
