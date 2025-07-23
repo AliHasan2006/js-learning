@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Time Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #03071e;
+            overflow: hidden;
+        }
+        .container {
+            background: #f48c06;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            /* border-radius: 50%; */
+            height: 100px;
+            width:180px;
+        }
+        #time {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Current Time</h2>
+        <p id="time">00:00:00</p>
+    </div>
+
+    <script>
+const currentTime = document.querySelector('#time')
+
+setInterval( function(){
+    const time = new Date();
+    currentTime.innerHTML=`${time.toLocaleTimeString()}`;
+},1000)
+
+    </script>
+</body>
+</html>

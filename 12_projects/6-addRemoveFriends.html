@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angel Priya Insta Page</title>
+
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        font-family: 'Gilory';
+        box-sizing: border-box;
+    }
+    html,body{
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+    body{
+        background-color: cornflowerblue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #card{
+        height: 450px;
+        width: 300px;
+        background-color:azure;
+        border-radius: 10px;
+        padding: 30px;
+    }
+    #card img{
+        height: 55%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 10px;
+    }
+    h1{
+        margin: 10px 0;
+        font-size: 30px;
+    }
+    #txt{
+        font-size: 25px;
+        margin-top: 20px;
+        color: red;
+    }
+    #addRemove{
+        background-color:cadetblue;
+        color:aliceblue;
+        font-weight: 700;
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: none;
+        font-size: 18px;
+    }
+</style>
+
+</head>
+
+<body>
+    <div id="card">
+        <img src="https://images.unsplash.com/photo-1534008757030-27299c4371b6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fG1vZGVsfGVufDB8MHwwfHx8MA%3D%3D" alt="">
+        <h1>Angel Priya</h1>
+        <h1 id="txt">Stranger</h1>
+        <button id="addRemove">Add Friends</button>
+    </div>
+    <script>
+
+const txt = document.querySelector('#txt');
+const btn = document.querySelector('#addRemove');
+let check = 0;
+btn.addEventListener("click",(e)=>{
+    if (check == 0) {
+        txt.innerHTML = "Friends"
+        txt.style.color = "green"
+        btn.innerHTML = "Remove"
+        check = 1;
+        
+    } else {
+        txt.innerHTML = "Stranger"
+        txt.style.color = "red";
+        btn.innerHTML = "Add Friends"
+        check = 0;
+    }
+})
+    </script>
+</body>
+</html>

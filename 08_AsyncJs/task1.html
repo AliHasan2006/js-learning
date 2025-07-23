@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chai aur JavaScript</title>
+</head>
+
+<body>
+    <h1>Hello! Chai Aur JS World!</h1>
+    <button id="startBtn"><b>Start</b></button>
+    <button id="stopBtn"><b>Stop</b></button>
+
+    <script>
+        const startBtn = document.querySelector("#startBtn");
+        const stopBtn = document.querySelector("#stopBtn");
+        let intervalId;
+        function startPopUp() {
+            intervalId = setInterval(function () {
+                alert("Welcome! in Js World");
+            }, 3000);
+        }
+        function stopPopUp() {
+            clearInterval(intervalId);
+        }
+        startBtn.addEventListener('click', function (e) {
+            startPopUp();
+        });
+        stopBtn.addEventListener('click', function (e) {
+            stopPopUp();
+        });
+
+    </script>
+</body>
+
+</html>
