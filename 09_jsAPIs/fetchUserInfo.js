@@ -5,7 +5,7 @@ async function promiseConsume() {
         console.log(response);
          console.log(data);
     } catch (error) {
-     console.log("402");   
+     console.log(402);   
     }
 }
 promiseConsume();
