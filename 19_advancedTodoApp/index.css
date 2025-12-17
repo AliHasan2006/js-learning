@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    height: 100%;
+    width: 100%;
+}
+:root{
+
+    /* color variable */
+    --bg-color: #000000;
+    --text-color: #f4f4f4;
+
+    /* padding variables */
+}
+body{
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+#navbar{
+}

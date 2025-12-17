@@ -37,3 +37,13 @@ user2.email = "user2@gmail.com";
 
 console.log(user2.email);  // user2@gmail.com
 console.log(user1.email);  // user2@gmail.com
+
+let array1 = ['raza','askari','shariq'];
+console.log(array1);
+let array2 = array1;
+array2[2] = 'oldMan'
+console.log(array2);
+console.log(array1);
+
+
+

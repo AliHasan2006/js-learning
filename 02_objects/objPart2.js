@@ -26,8 +26,8 @@ const obj4 = {5: "a", 6: "b"}
 // const obj3 = { obj1, obj2 }
 // const obj3 = Object.assign({}, obj1, obj2, obj4)
 
-const obj3 = {...obj1, ...obj2,...obj4} // spread Operator
-console.log(obj3);
+ const obj3 = {...obj1, ...obj2,...obj4} // spread Operator
+ console.log(obj3);
 
 
 const users = [
@@ -70,7 +70,7 @@ const course = {
 const {courseInstructor: mentor} = course
 
 // console.log(courseInstructor);
-// console.log(mentor);
+console.log(mentor);
 
 // // {
 // //     "name": "hitesh",

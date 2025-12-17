@@ -1,7 +1,7 @@
 const coding = ["js", "ruby", "java", "python", "cpp"]
 
 coding.forEach( function (val,indx){
-    // console.log(val,indx);
+    console.log(val,indx);
 } )
 
 // coding.forEach( (item) => {
@@ -18,24 +18,25 @@ coding.forEach( function (val,indx){
 //     console.log(item, index, arr);
 // } )
 
-// const myCoding = [
-//     {
-//         languageName: "javascript",
-//         languageFileName: "js"
-//     },
-//     {
-//         languageName: "java",
-//         languageFileName: "java"
-//     },
-//     {
-//         languageName: "python",
-//         languageFileName: "py"
-//     },
-// ]
+const myCoding = [
+    {
+        languageName: "javascript",
+        languageFileName: "js"
+    },
+    {
+        languageName: "java",
+        languageFileName: "java"
+    },
+    {
+        languageName: "python",
+        languageFileName: "py"
+    },
+]
 
-// myCoding.forEach( (item) => {
-//     console.log(item);
+myCoding.forEach( (item) => {
+    console.log(item);
+
     
-//     console.log(item.languageName);
-// } )
+    console.log(item.languageName);
+} );
 

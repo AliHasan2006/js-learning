@@ -1,4 +1,4 @@
-//  Aisa Function jo Dusre function ke ander aisa argument paas hota hai use call back function kehte hain
+//  Aisa Function jo Dusre function ke ander as a argument paas hota hai use call back function kehte hain
 
 function sum(a,b) {
     console.log(a+b);

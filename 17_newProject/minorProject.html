@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Reviewer – Sample UI (HTML/CSS/JS only)</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #0f1720;
+      --muted: #8aa1b1;
+      --text: #e6edf3;
+      --accent: #4f9cff;
+      --accent-2: #22c55e;
+      --danger: #ef4444;
+      --border: #1e2937;
+      --shadow: 0 10px 25px rgba(0,0,0,0.3);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: linear-gradient(180deg, #091018, #0b0f14 40%);
+      color: var(--text); font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial;
+    }
+
+    .app {
+      max-width: 1200px; margin: 24px auto; padding: 0 16px;
+      display: grid; gap: 16px;
+      grid-template-rows: auto 1fr;
+    }
+
+    .toolbar {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 12px; display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .left {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .title { font-weight: 700; letter-spacing: 0.3px; }
+    .hint { color: var(--muted); font-size: 12px; }
+
+    .buttons { display: flex; gap: 8px; }
+    button {
+      appearance: none; border: 1px solid var(--border); background: #0d1520;
+      color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer;
+      font-weight: 600; letter-spacing: .2px; transition: .2s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+    button:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-primary { border-color: #1b2a3a; background: linear-gradient(180deg, #122033, #0e1724); }
+    .btn-primary .dot { background: var(--accent); }
+    .btn-success { border-color: #133021; background: linear-gradient(180deg, #0f251a, #0d1f16); }
+    .btn-success .dot { background: var(--accent-2); }
+    .btn-ghost { background: transparent; }
+
+    .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; }
+
+    .layout {
+      display: grid; gap: 16px; grid-template-columns: 1.1fr 1.4fr;
+      align-items: stretch;
+    }
+
+    .panel {
+      
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      overflow: hidden; display: flex; flex-direction: column; min-height: 480px;
+    }
+
+    .panel-header { 
+      padding: 12px 14px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    }
+    .panel-title { font-weight: 700; letter-spacing: .2px; }
+
+    .panel-body { flex: 1; display: grid; grid-template-rows: 1fr auto; }
+
+    /* Output (Left) */
+    .output {
+      padding: 14px; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: repeating-linear-gradient(
+        to bottom,
+        #0f1720 0, #0f1720 28px,
+        rgba(255,255,255,0.02) 28px, rgba(255,255,255,0.02) 29px
+      );
+      counter-reset: line;
+      white-space: pre-wrap;
+    }
+
+    .output .line { display: block; padding: 6px 10px; border: 1px solid transparent; border-radius: 8px; margin: 4px 0; }
+    .output .line.info { border-color: #1d2a3a; background: #0d1520; }
+    .output .line.warn { border-color: #3a2a1d; background: #1d140c; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+
+    /* Editor (Right) */
+    .editor-wrap { position: relative; height: 100%; }
+
+    .editor {
+      width: 100%; height: 100%; padding: 14px 16px 60px; outline: none; border: none; resize: none;
+      background: #0a0f16; color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13.5px; line-height: 1.6; caret-color: var(--accent);
+    }
+
+    .statusbar {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 42px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 12px; border-top: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      color: var(--muted); font-size: 12px;
+    }
+
+    .pill { border:1px solid var(--border); padding: 6px 10px; border-radius: 999px; }
+
+    /* Pseudocode visual styling */
+    .pseudo .line { border-color: #143249; background: #0c1d2b; }
+    .pseudo .line::before { content: "▸ "; color: var(--accent); }
+
+    /* Responsive */
+    @media (max-width: 930px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel { min-height: 340px; }
+    }
+  </style>
+</head>
+<body0>
+  <div class="app">
+    <div class="toolbar">
+      <div class="left">
+        <div class="title">Code Reviewer – Sample</div>
+        <div class="hint">HTML/CSS/JS only • Review → then Generate Pseudocode</div>
+      </div>
+      <div class="buttons">
+        <button id="reviewBtn" class="btn-primary"><span class="dot"></span>Review Code</button>
+        <button id="pseudoBtn" class="btn-success" disabled><span class="dot"></span>Generate Pseudocode</button>
+        <button id="resetBtn" class="btn-ghost">Reset</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- LEFT: Output -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title" id="leftTitle">Review Results</div>
+          <span class="badge" id="statusBadge">Waiting…</span>
+        </div>
+        <div class="panel-body">
+          <div class="output" id="output"></div>
+          <div style="padding:10px 14px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border);">
+            Tip: Run <b>Review</b> first to enable <b>Generate Pseudocode</b>.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Editor -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Editor</div>
+          <span class="badge">Client-side demo</span>
+        </div>
+        <div class="panel-body">
+          <div class="editor-wrap">
+            <textarea id="editor" class="editor" spellcheck="false"></textarea>
+            <div class="statusbar">
+              <span id="cursorPos">Ln 1, Col 1</span>
+              <span class="pill" id="charCount">0 chars</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // --- Elements
+    const editor = document.getElementById('editor');
+    const output = document.getElementById('output');
+    const reviewBtn = document.getElementById('reviewBtn');
+    const pseudoBtn = document.getElementById('pseudoBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const statusBadge = document.getElementById('statusBadge');
+    const leftTitle = document.getElementById('leftTitle');
+    const cursorPos = document.getElementById('cursorPos');
+    const charCount = document.getElementById('charCount');
+
+    // --- Starter code
+    const sample = `// Try editing and then click "Review Code"
+function factorial(n) {
+  if (n === 0) {
+    return 1; // base case
+  }
+  // TODO: validate input
+  return n * factorial(n - 1);
+}
+
+const x = 5; // unused on purpose
+console.log(factorial(5));
+`;
+    editor.value = sample;
+    charCount.textContent = `${editor.value.length} chars`;
+
+    // --- Helpers
+    function setBadge(text, tone='muted') {
+      statusBadge.textContent = text;
+      if (tone === 'ok') { statusBadge.style.color = '#86efac'; }
+      else if (tone === 'warn') { statusBadge.style.color = '#fca5a5'; }
+      else { statusBadge.style.color = '#8aa1b1'; }
+    }
+
+    function clearOutput() { output.innerHTML = ''; output.classList.remove('pseudo'); }
+
+    function addLine(text, level='info') {
+      const div = document.createElement('div');
+      div.className = `line ${level}`;
+      div.textContent = text;
+      output.appendChild(div);
+    }
+
+    // --- Simple client-side "review" (heuristic, demo only)
+    function runReview(code) {
+      clearOutput();
+      leftTitle.textContent = 'Review Results';
+
+      const lines = code.split(/\n/);
+      let issues = 0;
+
+      // Basic checks
+      if (!code.trim()) {
+        addLine('❗ No code provided. Paste code in the editor on the right.', 'warn');
+        setBadge('0 lines', 'warn');
+        return { issues: 1 };
+      }
+
+      addLine(`ℹ️ Lines: ${lines.length}`);
+      addLine(`ℹ️ Characters: ${code.length}`);
+
+      // Unused const/let/var detection (very naive)
+      const varDecl = [...code.matchAll(/\b(const|let|var)\s+(\w+)/g)].map(m => m[2]);
+      const used = new Set([...code.matchAll(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g)].map(m => m[1]));
+      varDecl.forEach(v => {
+        if (!code.includes(`console.log(${v})`) && (code.match(new RegExp(`\\b${v}\\b`, 'g')) || []).length <= 1) {
+          addLine(`⚠️ Possibly unused variable: ${v}`, 'warn');
+          issues++;
+        }
+      });
+
+      // Long lines
+      lines.forEach((ln, i) => {
+        if (ln.length > 100) { addLine(`⚠️ Line ${i+1} is too long (${ln.length} chars)`, 'warn'); issues++; }
+      });
+
+      // Console left in code
+      if (/console\.log\(/.test(code)) { addLine('ℹ️ console.log found (remove in production)'); }
+
+      if (/eval\(/.test(code)) { addLine('❗ Avoid using eval()', 'warn'); issues++; }
+
+      setBadge(issues ? `${issues} issue(s)` : 'Looks good ✓', issues ? 'warn' : 'ok');
+      return { issues };
+    }
+
+    // --- Pseudocode generator (lightweight, JS-focused, heuristic)
+    function toPseudocode(code) {
+      clearOutput();
+      output.classList.add('pseudo');
+      leftTitle.textContent = 'Pseudocode';
+
+      const lines = code.split(/\n/);
+
+      // Function declarations
+      const funcRegex = /function\s+(\w+)\s*\(([^)]*)\)\s*\{/;
+      const arrowFuncRegex = /const\s+(\w+)\s*=\s*\(([^)]*)\)\s*=>\s*\{/;
+
+      // Stack to manage blocks
+      const stack = [];
+
+      const trimmed = lines.map(l => l.replace(/\t/g, '  '));
+      let indent = 0;
+      function emit(text) { addLine(' '.repeat(indent * 3) + text); }
+
+      for (let i=0; i<trimmed.length; i++) {
+        const line = trimmed[i].trim();
+        if (!line) continue;
+
+        // Close blocks on '}'
+        if (line.startsWith('}')) {
+          if (stack.length) {
+            const top = stack.pop();
+            indent = Math.max(0, indent - 1);
+            if (top === 'function') emit('END FUNCTION');
+            else if (top === 'if') emit('END IF');
+            else if (top === 'else') {/* no END for else */}
+            else if (top === 'for') emit('END FOR');
+            else if (top === 'while') emit('END WHILE');
+            else if (top === 'switch') emit('END SWITCH');
+          }
+          continue;
+        }
+
+        let m;
+        if ((m = line.match(funcRegex))) {
+          const name = m[1];
+          const args = m[2].trim();
+          emit(`FUNCTION ${name}(${args})`);
+          indent++; stack.push('function'); continue;
+        }
+        if ((m = line.match(arrowFuncRegex))) {
+          const name = m[1];
+          const args = m[2].trim();
+          emit(`FUNCTION ${name}(${args})`);
+          indent++; stack.push('function'); continue;
+        }
+        if (/^if\s*\((.*)\)\s*\{?/.test(line)) {
+          const cond = line.replace(/^if\s*\((.*)\).*/, '$1');
+          emit(`IF ${cond} THEN`);
+          indent++; stack.push('if'); continue;
+        }
+        if (/^else if\s*\((.*)\)\s*\{?/.test(line)) {
+          const cond = line.replace(/^else if\s*\((.*)\).*/, '$1');
+          indent = Math.max(0, indent - 1);
+          emit(`ELSE IF ${cond} THEN`);
+          indent++; stack.push('if'); continue;
+        }
+        if (/^else\b/.test(line)) {
+          indent = Math.max(0, indent - 1);
+          emit('ELSE');
+          indent++; stack.push('else'); continue;
+        }
+        if (/^for\s*\((.*)\)\s*\{?/.test(line)) {
+          const head = line.replace(/^for\s*\((.*)\).*/, '$1');
+          emit(`FOR (${head})`);
+          indent++; stack.push('for'); continue;
+        }
+        if (/^while\s*\((.*)\)\s*\{?/.test(line)) {
+          const head = line.replace(/^while\s*\((.*)\).*/, '$1');
+          emit(`WHILE (${head})`);
+          indent++; stack.push('while'); continue;
+        }
+        if (/^return\b/.test(line)) {
+          emit(line.replace(/^return\s*/, 'RETURN '));
+          continue;
+        }
+        if (/^switch\s*\((.*)\)/.test(line)) {
+          const head = line.replace(/^switch\s*\((.*)\).*/, '$1');
+          emit(`SWITCH (${head})`);
+          indent++; stack.push('switch'); continue;
+        }
+        if (/^case\s+/.test(line)) {
+          emit(line.replace(/^case\s+/, 'CASE '));
+          indent++; continue;
+        }
+        if (/^break;?/.test(line)) { emit('BREAK'); if (indent>0) indent--; continue; }
+
+        // Fallback: describe statement
+        emit('DO ' + line.replace(/\s+/g, ' ').slice(0, 120));
+      }
+
+      setBadge('Pseudocode ready ✓', 'ok');
+    }
+
+    // --- Events
+    reviewBtn.addEventListener('click', () => {
+      const { issues } = runReview(editor.value);
+      pseudoBtn.disabled = false; // enable after review
+    });
+
+    pseudoBtn.addEventListener('click', () => {
+      // When showing pseudocode: hide review results (we already clearOutput inside)
+      toPseudocode(editor.value);
+      reviewBtn.disabled = true; // lock review after pseudocode
+    });
+
+    resetBtn.addEventListener('click', () => {
+      editor.value = sample; editor.focus();
+      pseudoBtn.disabled = true; reviewBtn.disabled = false;
+      setBadge('Waiting…'); leftTitle.textContent = 'Review Results';
+      clearOutput();
+    });
+
+    // Cursor & count
+    function updateCursor() {
+      const pos = editor.selectionStart;
+      const text = editor.value.substring(0, pos);
+      const line = (text.match(/\n/g) || []).length + 1;
+      const col = pos - text.lastIndexOf('\n');
+      cursorPos.textContent = `Ln ${line}, Col ${col}`;
+      charCount.textContent = `${editor.value.length} chars`;
+    }
+    editor.addEventListener('keyup', updateCursor);
+    editor.addEventListener('click', updateCursor);
+    editor.addEventListener('input', updateCursor);
+    updateCursor();
+  </script>
+</body>
+</html>
