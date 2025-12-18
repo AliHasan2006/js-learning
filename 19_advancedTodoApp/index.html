@@ -7,10 +7,36 @@
     <title>Kanban</title>
 </head>
 <body>
-    <nav id="navbar">
+<main>
+        <nav id="navbar">
         <h1>Kanban</h1>
         <button>Add new task</button>
     </nav>
-    <div id="board"></div>
+    <section id="board">
+        <div class="task-column">
+            <div class="heading">
+                <div id="left">To Do</div>
+                <div id="right">Count</div>
+            </div>
+        </div>
+        <div class="task-column">
+            <div class="heading">
+                <div id="left">In progress</div>
+                <div id="right">Count</div>
+                <div class="task">
+                    <h2>Task 1</h2>
+                    <p>Lorem ipsum dolor sit,</p>
+                    <button>Delete</button>
+                </div>
+            </div>
+        </div>
+        <div class="task-column">
+            <div class="heading">
+                <div id="left">Done</div>
+                <div id="right">Count</div>
+            </div>
+        </div>
+    </section>
+</main>
 </body>
 </html>
