@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/19_advancedTodoApp/index.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/19_advancedTodoApp/index.css" />
     <title>Kanban</title>
-</head>
-<body>
-<main>
-        <nav id="navbar">
+  </head>
+  <body>
+    <main>
+      <nav id="navbar">
         <h1>Kanban</h1>
-        <button>Add new task</button>
-    </nav>
-    <section id="board">
-        <div class="task-column">
-            <div class="heading">
-                <div id="left">To Do</div>
-                <div id="right">Count</div>
-            </div>
+        <button id="togle-model">Add new task</button>
+      </nav>
+      <section id="board">
+        <div class="task-column" id="todo">
+          <div class="heading">
+            <div id="left">To Do</div>  
+            <div id="right">Count</div>
+          </div>
+          <div class="task" draggable="true">
+            <h2>Task 1</h2>
+            <p>Lorem ipsum dolor sit,</p>
+            <button id="dltBtn">Delete</button>
+          </div>
         </div>
-        <div class="task-column">
-            <div class="heading">
-                <div id="left">In progress</div>
-                <div id="right">Count</div>
-                <div class="task">
-                    <h2>Task 1</h2>
-                    <p>Lorem ipsum dolor sit,</p>
-                    <button>Delete</button>
-                </div>
-            </div>
+        <div class="task-column" id="progress">
+          <div class="heading">
+            <div id="left">In progress</div>
+            <div id="right">Count</div>
+          </div>
         </div>
-        <div class="task-column">
-            <div class="heading">
-                <div id="left">Done</div>
-                <div id="right">Count</div>
-            </div>
+        <div class="task-column" id="done">
+          <div class="heading">
+            <div id="left">Done</div>
+            <div id="right">Count</div>
+          </div>
         </div>
-    </section>
-</main>
-</body>
+      </section>
+    </main>
+<div class="model">
+  <div class="bg">
+    <div class="center">
+      <input type="text" placeholder="Title" name="task-tittle"/>
+      <textarea name="task-description" placeholder="Enter Task description"></textarea>
+      <button id="addTask-btn">Add Task</button>
+    </div>
+  </div>
+</div>
+    <script src="script.js"></script>
+  </body>
 </html>
