@@ -5,35 +5,48 @@ const toggleModalBtn = document.querySelector("#toggle-model");
 const modal = document.querySelector(".modal");
 let dragItem = null;
 const rmvModal = document.querySelector(".modal .bg");
-const tasks = document.querySelectorAll('.task');
-const deleteBtn = document.querySelector('#dltBtn');
+const tasks = document.querySelectorAll(".task");
+const deleteBtn = document.querySelector("#dltBtn");
 const createTaskBtn = document.querySelector("#add-task-btn");
+const columns = [todo,progress,done];
+
 tasks.forEach((task) => {
-    task.addEventListener("dragstart", (e) => {
-        dragItem = task;
-    });
+  task.addEventListener("dragstart", (e) => {
+    dragItem = task;
+  });
 });
 
+changeCountVal = (col) => {
+  const taskTodos = col.querySelectorAll(".task");
+  const count = col.querySelector(".right");
+  // console.log(taskTodos.length);
+  count.innerText = taskTodos.length;
+  // console.log(count);
+};
+
 function addDragEventsOnColumn(column) {
-    column.addEventListener("dragenter", function (e) {
-        e.preventDefault();
-        column.classList.add("hover-over");
-    });
+  column.addEventListener("dragenter", function (e) {
+    e.preventDefault();
+    column.classList.add("hover-over");
+  });
 
-    column.addEventListener("dragleave", function (e) {
-        column.classList.remove("hover-over");
-    });
+  column.addEventListener("dragleave", function (e) {
+    column.classList.remove("hover-over");
+  });
 
-    column.addEventListener("dragover", (e) => {
-        e.preventDefault();
-    });
+  column.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
 
-    column.addEventListener("drop", (e) => {
-        if (dragItem) {
-            column.appendChild(dragItem);
-        }
-        column.classList.remove("hover-over");
-    });
+  column.addEventListener("drop", (e) => {
+    e.preventDefault();
+    if (dragItem) {
+      column.appendChild(dragItem);
+    }
+    column.classList.remove("hover-over");
+
+    columns.forEach(changeCountVal);
+  });
 }
 
 addDragEventsOnColumn(todo);
@@ -45,37 +58,31 @@ addDragEventsOnColumn(done);
 //     console.log(this.parentElement);
 // });
 
-
 // Modal logic
-toggleModalBtn.addEventListener('click',()=>{
- modal.classList.toggle('active');
-})
-rmvModal.addEventListener('click',()=>{
-    modal.classList.remove('active');
-})
+toggleModalBtn.addEventListener("click", () => {
+  modal.classList.toggle("active");
+});
+rmvModal.addEventListener("click", () => {
+  modal.classList.remove("active");
+});
 
 // Task creation Logic
-createTaskBtn.addEventListener('click',()=>{
-    let taskTittle = document.querySelector("#task-input").value;
-    let taskDesc = document.querySelector("#task-desc").value;
-    // console.log(taskDesc,taskTittle);
-    const newTask = document.createElement("div");
-    newTask.classList.add('task')
-    newTask.setAttribute('draggable', 'true');
-    newTask.innerHTML = `
+createTaskBtn.addEventListener("click", () => {
+  let taskTittle = document.querySelector("#task-input").value;
+  let taskDesc = document.querySelector("#task-desc").value;
+  // console.log(taskDesc,taskTittle);
+  const newTask = document.createElement("div");
+  newTask.classList.add("task");
+  newTask.setAttribute("draggable", "true");
+  newTask.innerHTML = `
     <h2>${taskTittle}</h2>
             <p>${taskDesc}</p>
             <button id="dltBtn">Delete</button>
-    `
-    newTask.addEventListener("dragstart", (e) => {
-        dragItem = newTask;
-    });
-    todo.appendChild(newTask);
-     modal.classList.remove('active');    
-})
-
-[todo,progress,done].forEach((col)=>{
-    const tasks = col.querySelectorAll("#task");
-    const count = col.querySelector(".right");
-    count.innerText = tasks.length;
-})
+    `;
+  newTask.addEventListener("dragstart", (e) => {
+    dragItem = newTask;
+  });
+  todo.appendChild(newTask);
+  modal.classList.remove("active");
+  changeCountVal(todo);
+});
