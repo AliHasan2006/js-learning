@@ -9,7 +9,7 @@ const tasks = document.querySelectorAll(".task");
 const deleteBtn = document.querySelector("#dltBtn");
 const createTaskBtn = document.querySelector("#add-task-btn");
 const columns = [todo,progress,done];
-
+let tasksData = {};
 tasks.forEach((task) => {
   task.addEventListener("dragstart", (e) => {
     dragItem = task;
@@ -21,7 +21,13 @@ changeCountVal = (col) => {
   const count = col.querySelector(".right");
   // console.log(taskTodos.length);
   count.innerText = taskTodos.length;
-  // console.log(count);
+  tasksData[col.id]=Array.from(taskTodos).map(t =>{
+    return {
+      tittle: t.querySelector("h2").innerText,
+      desc: t.querySelector("p").innerText
+    }
+  })
+  console.log(tasksData);
 };
 
 function addDragEventsOnColumn(column) {
@@ -84,5 +90,6 @@ createTaskBtn.addEventListener("click", () => {
   });
   todo.appendChild(newTask);
   modal.classList.remove("active");
-  changeCountVal(todo);
+  columns.forEach(changeCountVal);
+
 });
