@@ -1,95 +1,145 @@
-const todo = document.querySelector("#todo");
-const progress = document.querySelector("#progress");
-const done = document.querySelector("#done");
-const toggleModalBtn = document.querySelector("#toggle-model");
+/* =========================
+   DOM REFERENCES
+========================= */
+
+const todoColumn = document.querySelector("#todo");
+const progressColumn = document.querySelector("#progress");
+const doneColumn = document.querySelector("#done");
+const deleteBtn = document.querySelector(".dltBtn");
 const modal = document.querySelector(".modal");
-let dragItem = null;
-const rmvModal = document.querySelector(".modal .bg");
-const tasks = document.querySelectorAll(".task");
-const deleteBtn = document.querySelector("#dltBtn");
-const createTaskBtn = document.querySelector("#add-task-btn");
-const columns = [todo,progress,done];
+const modalBackdrop = document.querySelector(".modal .bg");
+const openModalBtn = document.querySelector("#toggle-model");
+const addTaskBtn = document.querySelector("#add-task-btn");
+
+const columns = [todoColumn, progressColumn, doneColumn];
+
+let draggedTask = null;
 let tasksData = {};
-tasks.forEach((task) => {
-  task.addEventListener("dragstart", (e) => {
-    dragItem = task;
+
+/* ========================= TASK CREATION ========================= */
+
+function createTaskElement(title, description) {
+  const task = document.createElement("div");
+  task.className = "task";
+  task.draggable = true;
+
+  task.innerHTML = `
+    <h2>${title}</h2>
+    <p>${description}</p>
+    <button class="dltBtn">Delete</button>
+  `;
+
+  task.addEventListener("dragstart", () => {
+    draggedTask = task;
   });
+
+  return task;
+}
+
+/* ========================= DELETE TASK ========================= */
+document.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("dltBtn")) return;
+
+  const task = e.target.closest(".task");
+  if (!task) return;
+
+  task.remove();
+  saveTasksToLocalStorage();
 });
 
-changeCountVal = (col) => {
-  const taskTodos = col.querySelectorAll(".task");
-  const count = col.querySelector(".right");
-  // console.log(taskTodos.length);
-  count.innerText = taskTodos.length;
-  tasksData[col.id]=Array.from(taskTodos).map(t =>{
-    return {
-      tittle: t.querySelector("h2").innerText,
-      desc: t.querySelector("p").innerText
-    }
-  })
-  console.log(tasksData);
-};
+/* ========================= LOCAL STORAGE FUNCTIONS ========================= */
 
-function addDragEventsOnColumn(column) {
-  column.addEventListener("dragenter", function (e) {
-    e.preventDefault();
+function saveTasksToLocalStorage() {
+  tasksData = {};
+
+  columns.forEach((column) => {
+    const tasks = column.querySelectorAll(".task");
+    const counter = column.querySelector(".right");
+
+    counter.innerText = tasks.length;
+
+    tasksData[column.id] = [...tasks].map((task) => ({
+      title: task.querySelector("h2").innerText,
+      desc: task.querySelector("p").innerText,
+    }));
+  });
+
+  localStorage.setItem("tasks", JSON.stringify(tasksData));
+}
+
+function loadTasksFromLocalStorage() {
+  const storedTasks = localStorage.getItem("tasks");
+  if (!storedTasks) return;
+
+  const data = JSON.parse(storedTasks);
+
+  Object.keys(data).forEach((columnId) => {
+    const column = document.getElementById(columnId);
+
+    data[columnId].forEach(({ title, desc }) => {
+      column.appendChild(createTaskElement(title, desc));
+    });
+  });
+
+  saveTasksToLocalStorage();
+}
+
+/* ========================= TASK DRAG & DROP ========================= */
+
+function enableDragAndDrop(column) {
+  column.addEventListener("dragover", (e) => e.preventDefault());
+
+  column.addEventListener("dragenter", () => {
     column.classList.add("hover-over");
   });
 
-  column.addEventListener("dragleave", function (e) {
+  column.addEventListener("dragleave", () => {
     column.classList.remove("hover-over");
   });
 
-  column.addEventListener("dragover", (e) => {
-    e.preventDefault();
-  });
+  column.addEventListener("drop", () => {
+    if (!draggedTask) return;
 
-  column.addEventListener("drop", (e) => {
-    e.preventDefault();
-    if (dragItem) {
-      column.appendChild(dragItem);
-    }
+    column.appendChild(draggedTask);
     column.classList.remove("hover-over");
-
-    columns.forEach(changeCountVal);
+    saveTasksToLocalStorage();
   });
 }
 
-addDragEventsOnColumn(todo);
-addDragEventsOnColumn(progress);
-addDragEventsOnColumn(done);
+/* =========================
+   MODAL HANDLERS
+========================= */
 
-// deleteBtn.addEventListener('click', function () {
-//     alert('hi');
-//     console.log(this.parentElement);
-// });
-
-// Modal logic
-toggleModalBtn.addEventListener("click", () => {
+openModalBtn.addEventListener("click", () => {
   modal.classList.toggle("active");
 });
-rmvModal.addEventListener("click", () => {
+
+modalBackdrop.addEventListener("click", () => {
   modal.classList.remove("active");
 });
 
-// Task creation Logic
-createTaskBtn.addEventListener("click", () => {
-  let taskTittle = document.querySelector("#task-input").value;
-  let taskDesc = document.querySelector("#task-desc").value;
-  // console.log(taskDesc,taskTittle);
-  const newTask = document.createElement("div");
-  newTask.classList.add("task");
-  newTask.setAttribute("draggable", "true");
-  newTask.innerHTML = `
-    <h2>${taskTittle}</h2>
-            <p>${taskDesc}</p>
-            <button id="dltBtn">Delete</button>
-    `;
-  newTask.addEventListener("dragstart", (e) => {
-    dragItem = newTask;
-  });
-  todo.appendChild(newTask);
-  modal.classList.remove("active");
-  columns.forEach(changeCountVal);
+/* =========================
+   ADD TASK
+========================= */
 
+addTaskBtn.addEventListener("click", () => {
+  const title = document.querySelector("#task-input").value.trim();
+  const desc = document.querySelector("#task-desc").value.trim();
+
+  if (!title || !desc) {
+    alert("Please Enter Something!!")
+    return;
+  }
+
+  todoColumn.appendChild(createTaskElement(title, desc));
+  modal.classList.remove("active");
+
+  saveTasksToLocalStorage();
 });
+
+/* =========================
+   INITIALIZATION
+========================= */
+
+columns.forEach(enableDragAndDrop);
+loadTasksFromLocalStorage();
